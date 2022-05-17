@@ -27,8 +27,8 @@ public class APIService {
     }
 
 
-    private Boolean isOperational(Extra e){
-        return e != null && e.getRenting() != null && e.getRenting().equals(1);
+    private Boolean isOperational(Extra extra){
+        return extra != null && extra.getRenting() != null && extra.getRenting().equals(1);
     }
 
     private List<Station> getAllStations(){
@@ -61,7 +61,7 @@ public class APIService {
         Station closest = null;
         Double minDistance = null;
         for (Station station : operationalStations) {
-            Double distance = distance(lat, station.getLatitude(), lon, station.getLongitude());
+            Double distance = DistanceHelper.calculateDistance(lat, station.getLatitude(), lon, station.getLongitude());
             if (minDistance == null || minDistance > distance) {
                 minDistance = distance;
                 closest = station;
@@ -70,21 +70,4 @@ public class APIService {
         return closest;
     }
 
-
-    private Double distance(double lat1, double lat2, double lon1, double lon2) {
-
-        final int R = 6371; // Radius of the earth
-
-        double latDistance = Math.toRadians(lat2 - lat1);
-        double lonDistance = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double distance = R * c * 1000; // convert to meters
-
-        distance = Math.pow(distance, 2) ;
-
-        return Math.sqrt(distance);
-    }
 }
